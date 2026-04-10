@@ -6,21 +6,9 @@ FROM ubuntu:24.04
 # Switch from dash to bash by default.
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
-# Remove minimization restrictions and install packages with documentation
-# We aim for a usable non-minimal system.
+# Install system dependencies.
 RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirror://mirrors.ubuntu.com/mirrors.txt|' /etc/apt/sources.list && \
-        rm -f /etc/dpkg/dpkg.cfg.d/excludes /etc/dpkg/dpkg.cfg.d/01_nodoc && \
 	apt-get update && \
-	# Pre-configure debconf to avoid interactive prompts
-	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
-	# Pre-configure pbuilder to avoid mirror prompt
-	echo 'pbuilder pbuilder/mirrorsite string http://archive.ubuntu.com/ubuntu' | debconf-set-selections && \
-	# Run unminimize with single 'y' response to restore documentation
-	echo 'y' | DEBIAN_FRONTEND=noninteractive unminimize && \
-	# Install man-db and reinstall all base packages to get their man pages back
-	DEBIAN_FRONTEND=noninteractive apt-get install -y man-db && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --reinstall $(dpkg-query -f '${binary:Package} ' -W) && \
-	mandb -c && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y \
 		ca-certificates wget ripgrep \
 		git jq sqlite3 curl vim neovim lsof iproute2 less nginx \
@@ -45,6 +33,7 @@ RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirror://mirrors.ubuntu.c
 		gh \
 		dbus-user-session \
 		&& apt-get remove -y pollinate ubuntu-fan && \
+	apt-get clean && rm -rf /var/lib/apt/lists/* && \
 	# Allow non-root users to use ping without sudo by granting CAP_NET_RAW
 	setcap cap_net_raw=+ep /usr/bin/ping && \
 	fc-cache -f -v && \

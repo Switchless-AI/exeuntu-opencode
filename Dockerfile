@@ -185,7 +185,7 @@ WORKDIR /home/exedev
 
 # Update PATH in .bashrc to include .local/bin and set XDG_RUNTIME_DIR for systemd user services
 # XDG paths are not autopopulated despite the presense of libpam-systemd. Manually add them here.
-RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/exedev/.bashrc && \
+RUN echo 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"' >> /home/exedev/.bashrc && \
     echo 'export XDG_RUNTIME_DIR="/run/user/$(id -u)"' >> /home/exedev/.bashrc && \
     echo 'export XDG_RUNTIME_DIR="/run/user/$(id -u)"' >> /home/exedev/.profile
 
@@ -277,9 +277,9 @@ RUN chmod 644 /var/www/html/index.html
 COPY xterm-ghostty.terminfo /tmp/xterm-ghostty.terminfo
 RUN tic -x - < /tmp/xterm-ghostty.terminfo && rm /tmp/xterm-ghostty.terminfo
 
-# Install OpenCode and place binary where systemd expects it.
-RUN curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path && \
-    install -m 755 /root/.opencode/bin/opencode /usr/local/bin/opencode
+# Install OpenCode for exedev in its native location.
+RUN sudo -u exedev bash -lc 'curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path' && \
+    test -x /home/exedev/.opencode/bin/opencode
 
 # Expose the web server ports
 EXPOSE 8000 9999

@@ -8,7 +8,7 @@ User=exedev
 Group=exedev
 WorkingDirectory=/home/exedev
 EnvironmentFile=-/etc/default/opencode
-ExecStart=/usr/local/bin/opencode serve --port 9999 --hostname 0.0.0.0
+ExecStart=/home/exedev/.opencode/bin/opencode serve --port 9999 --hostname 0.0.0.0
 Restart=on-failure
 RestartSec=5
 Environment=HOME=/home/exedev

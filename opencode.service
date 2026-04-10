@@ -1,0 +1,25 @@
+[Unit]
+Description=OpenCode Server
+After=network.target
+
+[Service]
+Type=simple
+User=exedev
+Group=exedev
+WorkingDirectory=/home/exedev
+EnvironmentFile=-/etc/default/opencode
+ExecStart=/usr/local/bin/opencode serve --port 9999 --hostname 0.0.0.0
+Restart=on-failure
+RestartSec=5
+Environment=HOME=/home/exedev
+Environment=USER=exedev
+Environment=PATH=/headless-shell:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+KillMode=process
+TimeoutStopSec=10
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opencode
+
+[Install]
+WantedBy=multi-user.target

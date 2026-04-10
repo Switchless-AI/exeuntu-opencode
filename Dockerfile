@@ -281,8 +281,8 @@ RUN tic -x - < /tmp/xterm-ghostty.terminfo && rm /tmp/xterm-ghostty.terminfo
 RUN sudo -u exedev bash -lc 'curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path' && \
     test -x /home/exedev/.opencode/bin/opencode
 
-# Expose the web server ports
-EXPOSE 8000 9999
+# Expose the OpenCode server port
+EXPOSE 8000
 
 LABEL "exe.dev/login-user"="exedev"
 CMD ["/usr/local/bin/init"]

@@ -32,7 +32,7 @@ mount -o remount,rw /proc/sys
 
 # Capture OpenCode credentials from environment and save them for the service
 cat <<EOF > /etc/default/opencode
-OPENCODE_USERNAME=${OPENCODE_USERNAME:-admin}
+OPENCODE_SERVER_USERNAME=${OPENCODE_SERVER_USERNAME:-${OPENCODE_USERNAME:-opencode}}
 OPENCODE_SERVER_PASSWORD=${OPENCODE_SERVER_PASSWORD:-}
 EOF
 chmod 600 /etc/default/opencode

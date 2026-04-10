@@ -277,8 +277,9 @@ RUN chmod 644 /var/www/html/index.html
 COPY xterm-ghostty.terminfo /tmp/xterm-ghostty.terminfo
 RUN tic -x - < /tmp/xterm-ghostty.terminfo && rm /tmp/xterm-ghostty.terminfo
 
-# Install OpenCode using the official installer script
-RUN OPENCODE_INSTALL_DIR=/usr/local/bin curl -fsSL https://opencode.ai/install | bash
+# Install OpenCode and place binary where systemd expects it.
+RUN curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path && \
+    install -m 755 /root/.opencode/bin/opencode /usr/local/bin/opencode
 
 # Expose the web server ports
 EXPOSE 8000 9999
